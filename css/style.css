@@ -3,3 +3,42 @@
     flex-direction: column;
     width: 55vw;
 }
+
+.lower-case {
+    text-transform: lowercase;
+}
+.row {
+    display: flex;
+}
+.key {
+    flex: 0 0 3vw;
+    height: 3vw;
+    margin: 0.25vw;
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 2vw;
+    border-radius: 3px;
+    border: 1px solid;
+    text-align: center;
+    line-height: 3vw;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: color 0.1s linear;
+}
+
+.key.active {
+    background-color: rgb(255 0 88 / 20%);
+    transition: color 0.2s linear;
+}
+
+.first-char {
+    vertical-align: 50%;
+    font-size: 0.75em;
+    margin-right: 0.5vw;
+    line-height: 1.5vw;
+}
+
+.second-char {
+    vertical-align: -50%;
+    line-height: 1.5vw;
+}

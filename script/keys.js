@@ -1,6 +1,6 @@
-const keys = [
-//<type>,  <mutable>, <keyCode>, <name(en)>, <input(en)>, <input(en) + shift>, <name(ru)>, <input(ru)>, <input(ru) + shift>
-//     keyline1
+export const keys = [
+
+    // keyline1
     [{
         type: 'char',
         mutable: true,

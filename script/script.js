@@ -1,3 +1,5 @@
+import {keys} from './keys.js'
+const a=keys[0]
 /* create HTML */
 
 /*meta tags*/
@@ -44,11 +46,157 @@ inputWithInfo.append(info, textarea)
 const container = document.createElement('div');
 container.classList.add('container');
 
+// variables
+
+let currentKey;
+const wideButtons = ['Backspace', 'Tab', 'Delete', 'CapsLock', 'Enter', 'ShiftLeft', 'ShiftRight', 'Space'];
+
+// get current getLanguage
+const getLanguage = () => {
+    let current = 'en';
+    if (localStorage.getItem('currentLanguage')) {
+        current = localStorage.getItem('currentLanguage');
+    } else {
+        localStorage.setItem('currentLanguage', current);
+    }
+    return current
+};
+
+// change language
+const change = () => {
+    let current = getLanguage()
+    let next = (current === 'en') ? 'ru' : 'en';
+
+    localStorage.setItem('currentLanguage', next);
+    return next
+};
+
+// button layout
+const buttonLayout = (charName) => {
+    const charsWrapper = document.createElement('div');
+    charsWrapper.classList.add('chars-container')
+    if (charName.length === 2) {
+        const firstEl = document.createElement('span');
+        const secondEL = document.createElement('span');
+        firstEl.innerHTML = `${charName[0]}`;
+        firstEl.classList.add('first-char');
+
+        secondEL.innerHTML = `${charName[1]}`;
+        secondEL.classList.add('second-char');
+
+        charsWrapper.append(firstEl, secondEL);
+
+    } else {
+        charsWrapper.innerText = charName;
+    }
+    return charsWrapper;
+};
+
+/* Create Key */
+// let keyq = {
+//     type: 'char',
+//     mutable: false,
+//     keyCode: 'Digit1',
+//     en: {name: '!1', input: '1', inputShift: '!',},
+//     ru: {name: '!1', input: '1', inputShift: '!'},
+//
+//     type: 'action',
+//     mutable: false,
+//     keyCode: 'Backspace',
+//     en: {name: 'Backspace'},
+//     ru: {name: 'Backspace'}
+//
+// }
+
+const mouseWatch = () => {
+
+    container.addEventListener('mouseup', () => {
+        console.log('mouseup')
+    }, {once: true});
+    container.addEventListener('mouseleave', () => {
+        console.log('mouseleave')
+    }, {once: true});
+
+};
+function createRow() {
+    let rowElement = document.createElement('div');
+
+    rowElement.classList.add('row');
+    return rowElement
+
+}
+
+class Key {
+    constructor({
+                    type,
+                    mutable,
+                    keyCode,
+                    en,
+                    ru,
+                }
+    ) {
+        this.en = en
+        this.ru = ru
+        this.type = type;
+        this.isMutable = mutable;
+        this.keyElement = document.createElement('div');
+
+        this.keyElement.classList.add('key');
+        this.keyElement.setAttribute('data-keycode', keyCode);
+        this.keyElement.appendChild(buttonLayout(getLanguage() === 'en' ? this.en.name : this.ru.name))
+        this.nameToLowerCase();
+
+        this.keyElement.addEventListener('mousedown', (event) => {
+            textarea.focus();
+            // activeKeys.push(keyCode);
+            // emulateKeyDown(keyCode);
+            if (event.which === 1) {
+                mouseWatch();
+            }
+        });
+
+        this.keyElement.addEventListener('mouseenter', () => {
+            currentKey = keyCode;
+        });
+
+        this.keyElement.addEventListener('mouseleave', () => {
+            currentKey = '';
+        });
+
+        if (wideButtons.includes(keyCode)) {
+            this.keyElement.classList.add('wide-button');
+        }
+    }
+
+    nameToUpperCase() {
+        if (this.isMutable) {
+            this.keyElement.classList.remove('lower-case');
+        }
+    }
+
+    nameToLowerCase() {
+        if (this.isMutable) {
+            this.keyElement.classList.add('lower-case');
+        }
+    }
+    buildKey(){
+        return this.keyElement
+    }
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
     document.body.appendChild(inputWithInfo);
+    let keynode=new Key(keys[1][4])
+    let keynode5=new Key(keys[1][5])
+    let keynode6=new Key(keys[1][6])
+    console.log(keynode)
+
+    let row=createRow()
+    container.append(row)
+    row.append(keynode.buildKey(),keynode5.buildKey(),keynode6.buildKey())
     document.body.appendChild(container);
 
 
-
 });
+
