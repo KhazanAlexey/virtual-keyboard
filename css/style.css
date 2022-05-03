@@ -7,16 +7,18 @@
 .lower-case {
     text-transform: lowercase;
 }
+
 .row {
     display: flex;
 }
+
 .key {
     flex: 0 0 3vw;
     height: 3vw;
     margin: 0.25vw;
     white-space: nowrap;
     overflow: hidden;
-    font-size: 2vw;
+    font-size: 1.5vw;
     border-radius: 3px;
     border: 1px solid;
     text-align: center;
@@ -41,4 +43,8 @@
 .second-char {
     vertical-align: -50%;
     line-height: 1.5vw;
+}
+
+.wide-button {
+    flex: 1 0 9vw;
 }

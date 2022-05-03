@@ -365,8 +365,8 @@ export const keys = [
             en: {name: '?/', input: '/', inputShift: '?',},
             ru: {name: ',.', input: '.', inputShift: ','}
         },
-        {type: 'action', mutable: false, keyCode: 'ArrowUp', en: {name: '\u2191'}},
-        {type: 'action', mutable: false, keyCode: 'ShiftRight', en: {name: 'Shift'}},
+        {type: 'action', mutable: false, keyCode: 'ArrowUp', en: {name: '\u2191'},ru: {name: '\u2191'}},
+        {type: 'action', mutable: false, keyCode: 'ShiftRight', en: {name: 'Shift'}, ru: {name: 'Shift'}},
 
     ],
     // keyLine5

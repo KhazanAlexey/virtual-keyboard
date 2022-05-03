@@ -1,5 +1,6 @@
 import {keys} from './keys.js'
-const a=keys[0]
+
+const a = keys[0]
 /* create HTML */
 
 /*meta tags*/
@@ -118,6 +119,7 @@ const mouseWatch = () => {
     }, {once: true});
 
 };
+
 function createRow() {
     let rowElement = document.createElement('div');
 
@@ -140,11 +142,9 @@ class Key {
         this.type = type;
         this.isMutable = mutable;
         this.keyElement = document.createElement('div');
-
         this.keyElement.classList.add('key');
         this.keyElement.setAttribute('data-keycode', keyCode);
         this.keyElement.appendChild(buttonLayout(getLanguage() === 'en' ? this.en.name : this.ru.name))
-        this.nameToLowerCase();
 
         this.keyElement.addEventListener('mousedown', (event) => {
             textarea.focus();
@@ -172,31 +172,47 @@ class Key {
         if (this.isMutable) {
             this.keyElement.classList.remove('lower-case');
         }
+        return this
     }
 
     nameToLowerCase() {
         if (this.isMutable) {
             this.keyElement.classList.add('lower-case');
+
         }
+        return this
     }
-    buildKey(){
+
+    buildKey() {
         return this.keyElement
     }
 }
 
+function createKeyboardLayout(registerCase) {
+
+    keys.forEach(rowArr => {
+        let row = createRow()
+        container.append(row)
+        let rowKeysNode = rowArr.map((k, i) => new Key(k)).map(key =>
+            key[registerCase]().buildKey()
+        )
+
+        row.append(...rowKeysNode)
+    })
+
+    document.body.appendChild(container);
+}
 
 document.addEventListener('DOMContentLoaded', () => {
+
     document.body.appendChild(inputWithInfo);
-    let keynode=new Key(keys[1][4])
-    let keynode5=new Key(keys[1][5])
-    let keynode6=new Key(keys[1][6])
-    console.log(keynode)
+    change()
 
-    let row=createRow()
-    container.append(row)
-    row.append(keynode.buildKey(),keynode5.buildKey(),keynode6.buildKey())
-    document.body.appendChild(container);
-
+    createKeyboardLayout('nameToUpperCase')
+    document.addEventListener('keydown', (event) => {
+        event.preventDefault();
+        console.log(event.code);
+    });
 
 });
 
