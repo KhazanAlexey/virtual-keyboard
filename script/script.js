@@ -1,9 +1,8 @@
-import {keys} from './keys.js'
+import { keys } from "./keys.js";
 
-const a = keys[0]
 /* create HTML */
 
-/*meta tags*/
+/* meta tags */
 // const metaCharset = document.createElement('meta');
 // metaCharset.setAttribute('charset', 'UTF-8');
 // document.head.appendChild(metaCharset);
@@ -24,7 +23,7 @@ const favicon = `<link rel="apple-touch-icon" sizes="180x180" href="favicon/appl
 <link rel="manifest" href="favicon/site.webmanifest">
 <link rel="mask-icon" href="favicon/safari-pinned-tab.svg" color="#5bbad5">
 <meta name="msapplication-TileColor" content="#da532c">
-<meta name="theme-color" content="#ffffff">`
+<meta name="theme-color" content="#ffffff">`;
 
 document.head.insertAdjacentHTML('beforeend', favicon);
 
@@ -34,7 +33,7 @@ document.head.appendChild(title);
 
 const info = document.createElement('div');
 info.classList.add('info');
-info.insertAdjacentText('afterbegin', 'SSЫЫЫЫЫ ыыыыыыыы')
+info.insertAdjacentText('afterbegin', 'SSЫЫЫЫЫ ыыыыыыыы');
 
 const textarea = document.createElement('textarea');
 textarea.setAttribute('autofocus', '');
@@ -42,7 +41,7 @@ textarea.setAttribute('rows', '10');
 
 const inputWithInfo = document.createElement('div');
 inputWithInfo.classList.add('info-input-container');
-inputWithInfo.append(info, textarea)
+inputWithInfo.append(info, textarea);
 
 const container = document.createElement('div');
 container.classList.add('container');
@@ -54,43 +53,42 @@ const wideButtons = ['Backspace', 'Tab', 'Delete', 'CapsLock', 'Enter', 'ShiftLe
 
 // get current getLanguage
 const getLanguage = () => {
-    let current = 'en';
-    if (localStorage.getItem('currentLanguage')) {
-        current = localStorage.getItem('currentLanguage');
-    } else {
-        localStorage.setItem('currentLanguage', current);
-    }
-    return current
+  let current = 'en';
+  if (localStorage.getItem('currentLanguage')) {
+    current = localStorage.getItem('currentLanguage');
+  } else {
+    localStorage.setItem('currentLanguage', current);
+  }
+  return current;
 };
 
 // change language
 const change = () => {
-    let current = getLanguage()
-    let next = (current === 'en') ? 'ru' : 'en';
+  const current = getLanguage();
+  const next = (current === 'en') ? 'ru' : 'en';
 
-    localStorage.setItem('currentLanguage', next);
-    return next
+  localStorage.setItem('currentLanguage', next);
+  return next;
 };
 
 // button layout
 const buttonLayout = (charName) => {
-    const charsWrapper = document.createElement('div');
-    charsWrapper.classList.add('chars-container')
-    if (charName.length === 2) {
-        const firstEl = document.createElement('span');
-        const secondEL = document.createElement('span');
-        firstEl.innerHTML = `${charName[0]}`;
-        firstEl.classList.add('first-char');
+  const charsWrapper = document.createElement('div');
+  charsWrapper.classList.add('chars-container');
+  if (charName.length === 2) {
+    const firstEl = document.createElement('span');
+    const secondEL = document.createElement('span');
+    firstEl.innerHTML = `${charName[0]}`;
+    firstEl.classList.add('first-char');
 
-        secondEL.innerHTML = `${charName[1]}`;
-        secondEL.classList.add('second-char');
+    secondEL.innerHTML = `${charName[1]}`;
+    secondEL.classList.add('second-char');
 
-        charsWrapper.append(firstEl, secondEL);
-
-    } else {
-        charsWrapper.innerText = charName;
-    }
-    return charsWrapper;
+    charsWrapper.append(firstEl, secondEL);
+  } else {
+    charsWrapper.innerText = charName;
+  }
+  return charsWrapper;
 };
 
 /* Create Key */
@@ -110,109 +108,100 @@ const buttonLayout = (charName) => {
 // }
 
 const mouseWatch = () => {
-
-    container.addEventListener('mouseup', () => {
-        console.log('mouseup')
-    }, {once: true});
-    container.addEventListener('mouseleave', () => {
-        console.log('mouseleave')
-    }, {once: true});
-
+  container.addEventListener('mouseup', () => {
+    console.log('mouseup');
+  }, { once: true });
+  container.addEventListener('mouseleave', () => {
+    console.log('mouseleave');
+  }, { once: true });
 };
 
 function createRow() {
-    let rowElement = document.createElement('div');
+  const rowElement = document.createElement('div');
 
-    rowElement.classList.add('row');
-    return rowElement
-
+  rowElement.classList.add('row');
+  return rowElement;
 }
 
 class Key {
-    constructor({
-                    type,
-                    mutable,
-                    keyCode,
-                    en,
-                    ru,
-                }
-    ) {
-        this.en = en
-        this.ru = ru
-        this.type = type;
-        this.isMutable = mutable;
-        this.keyElement = document.createElement('div');
-        this.keyElement.classList.add('key');
-        this.keyElement.setAttribute('data-keycode', keyCode);
-        this.keyElement.appendChild(buttonLayout(getLanguage() === 'en' ? this.en.name : this.ru.name))
+  constructor({
+    type,
+    mutable,
+    keyCode,
+    en,
+    ru,
+  }) {
+    this.en = en;
+    this.ru = ru;
+    this.type = type;
+    this.isMutable = mutable;
+    this.keyElement = document.createElement('div');
+    this.keyElement.classList.add('key');
+    this.keyElement.setAttribute('data-keycode', keyCode);
+    this.keyElement.appendChild(buttonLayout(getLanguage() === 'en' ? this.en.name : this.ru.name));
 
-        this.keyElement.addEventListener('mousedown', (event) => {
-            textarea.focus();
-            // activeKeys.push(keyCode);
-            // emulateKeyDown(keyCode);
-            if (event.which === 1) {
-                mouseWatch();
-            }
-        });
+    this.keyElement.addEventListener('mousedown', (event) => {
+      textarea.focus();
+      // activeKeys.push(keyCode);
+      // emulateKeyDown(keyCode);
+      if (event.which === 1) {
+        mouseWatch();
+      }
+    });
 
-        this.keyElement.addEventListener('mouseenter', () => {
-            currentKey = keyCode;
-        });
+    this.keyElement.addEventListener('mouseenter', () => {
+      currentKey = keyCode;
+    });
 
-        this.keyElement.addEventListener('mouseleave', () => {
-            currentKey = '';
-        });
+    this.keyElement.addEventListener('mouseleave', () => {
+      currentKey = '';
+    });
 
-        if (wideButtons.includes(keyCode)) {
-            this.keyElement.classList.add('wide-button');
-        }
+    if (wideButtons.includes(keyCode)) {
+      this.keyElement.classList.add('wide-button');
     }
+  }
 
-    nameToUpperCase() {
-        if (this.isMutable) {
-            this.keyElement.classList.remove('lower-case');
-        }
-        return this
+  nameToUpperCase() {
+    if (this.isMutable) {
+      this.keyElement.classList.remove('lower-case');
     }
+    return this;
+  }
 
-    nameToLowerCase() {
-        if (this.isMutable) {
-            this.keyElement.classList.add('lower-case');
-
-        }
-        return this
+  nameToLowerCase() {
+    if (this.isMutable) {
+      this.keyElement.classList.add('lower-case');
     }
+    return this;
+  }
 
-    buildKey() {
-        return this.keyElement
-    }
+  buildKey() {
+    return this.keyElement;
+  }
 }
 
 function createKeyboardLayout(registerCase) {
+  keys.forEach((rowArr) => {
+    const row = createRow();
+    container.append(row);
+    const rowKeysNode = rowArr
+      .map((k) => new Key(k))
+      .map((key) => key[registerCase]().buildKey());
 
-    keys.forEach(rowArr => {
-        let row = createRow()
-        container.append(row)
-        let rowKeysNode = rowArr.map((k, i) => new Key(k)).map(key =>
-            key[registerCase]().buildKey()
-        )
+    row.append(...rowKeysNode);
+  });
 
-        row.append(...rowKeysNode)
-    })
-
-    document.body.appendChild(container);
+  document.body.appendChild(container);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  document.body.appendChild(inputWithInfo);
+  change();
 
-    document.body.appendChild(inputWithInfo);
-    change()
-
-    createKeyboardLayout('nameToUpperCase')
-    document.addEventListener('keydown', (event) => {
-        event.preventDefault();
-        console.log(event.code);
-    });
-
+  createKeyboardLayout('nameToUpperCase');
+  document.addEventListener('keydown', (event) => {
+    event.preventDefault();
+    console.log(event.code);
+  });
 });
-
