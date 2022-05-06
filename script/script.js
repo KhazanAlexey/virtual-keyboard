@@ -1,4 +1,4 @@
-import { keys } from "./keys.js";
+import keys from './keys.js';
 
 /* create HTML */
 
@@ -49,6 +49,8 @@ container.classList.add('container');
 // variables
 
 let currentKey;
+let rowKeysNodeS=[];
+
 const wideButtons = ['Backspace', 'Tab', 'Delete', 'CapsLock', 'Enter', 'ShiftLeft', 'ShiftRight', 'Space'];
 
 // get current getLanguage
@@ -107,7 +109,13 @@ const buttonLayout = (charName) => {
 //
 // }
 
-const mouseWatch = () => {
+// initialize textarea insertText method
+textarea.insertText = function insertText(text) {
+  this.setRangeText(text, textarea.selectionStart, textarea.selectionEnd, 'end');
+};
+
+const mouseWatch = (event) => {
+  console.log('evenr', event);
   container.addEventListener('mouseup', () => {
     console.log('mouseup');
   }, { once: true });
@@ -145,7 +153,7 @@ class Key {
       // activeKeys.push(keyCode);
       // emulateKeyDown(keyCode);
       if (event.which === 1) {
-        mouseWatch();
+        mouseWatch(event);
       }
     });
 
@@ -180,15 +188,42 @@ class Key {
     return this.keyElement;
   }
 }
+const isShiftPressed=()=>{
+  return false
+}
+
+function findPressedKeyValues(keyCode) {
+  let currentLang=getLanguage()
+  let shift=isShiftPressed()
+  let input=shift?'inputShift':'input'
+  let targetElement = {};
+  keys.forEach((row) => row.find(find));
+  function find(el) {
+    if (el.keyCode === keyCode) { return targetElement = el; }
+  }
+  if(targetElement.type==='char'){
+    return targetElement[currentLang][input];
+  }
+  if(targetElement.type==='action'){
+
+    startAction(targetElement)
+  }
+
+
+}
+
+function startAction(targetElement) {
+
+}
 
 function createKeyboardLayout(registerCase) {
   keys.forEach((rowArr) => {
     const row = createRow();
     container.append(row);
-    const rowKeysNode = rowArr
+    let rowKeysNode = rowArr
       .map((k) => new Key(k))
       .map((key) => key[registerCase]().buildKey());
-
+    rowKeysNodeS.push(rowKeysNode)
     row.append(...rowKeysNode);
   });
 
@@ -200,8 +235,23 @@ document.addEventListener('DOMContentLoaded', () => {
   change();
 
   createKeyboardLayout('nameToUpperCase');
+
   document.addEventListener('keydown', (event) => {
+   let targetDomEl= document.querySelector(`div[data-keycode=${event.code}]`)
     event.preventDefault();
-    console.log(event.code);
+
+    targetDomEl.classList.add('pressed')
+    let PressedKeyValue=findPressedKeyValues(event.code);
+    if (PressedKeyValue) textarea.insertText(PressedKeyValue)
+
+    console.log(PressedKeyValue);
+    console.log(rowKeysNodeS);
   });
+
+  document.addEventListener('keyup', (event) => {
+    let targetDomEl= document.querySelector(`div[data-keycode=${event.code}]`)
+    event.preventDefault();
+    targetDomEl.classList.remove('pressed')
+  });
+
 });

@@ -1,4 +1,4 @@
-export const keys = [
+const keys = [
 
   // keyline1
   [{
@@ -417,3 +417,4 @@ export const keys = [
 
   ],
 ];
+export default keys;

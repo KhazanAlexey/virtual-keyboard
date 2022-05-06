@@ -1,7 +1,7 @@
 .container {
     display: flex;
     flex-direction: column;
-    width: 55vw;
+    width: 69vw;
 }
 
 .lower-case {
@@ -47,4 +47,8 @@
 
 .wide-button {
     flex: 1 0 9vw;
+}
+
+.pressed{
+    background-color: rgba(255, 0, 242, 0.49);
 }
