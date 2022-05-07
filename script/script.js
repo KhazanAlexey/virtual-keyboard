@@ -208,7 +208,7 @@ function findPressedKeyValues(keyCode) {
       return el;
     }
   }
-  if (targetElement.type === 'action' && !isShiftLeftPressed) {
+  if (targetElement.type === 'action' && !isShiftLeftPressed ) {
     startAction(targetElement);
   }
   const currentLang = getLanguage();
@@ -260,8 +260,22 @@ function startAction(targetElement) {
     case
       'ShiftRight'
       :
+    {
+      if (isAltRightPressed) {
+        change();
+        isAltRightPressed = false;
+      }
+      if (isCapsLockPressed) {
+        createKeyboardLayout('nameToLowerCase');
+      } else {
+        createKeyboardLayout('nameToUpperCase');
+      }
       isShiftRightPressed = true;
-      // isShiftLeftPressed = false;
+      highlightCapsLock();
+
+      const targetDomEl = document.querySelector(`div[data-keycode=${key}]`);
+      targetDomEl.classList.add('pressed');
+    }
 
       break;
     case
@@ -298,7 +312,6 @@ function createKeyboardLayout(registerCase) {
     row.append(...rowKeysNode);
   });
 
-  // Array.from(container.children).slice(3);
   document.body.appendChild(container);
 }
 
@@ -327,12 +340,13 @@ document.addEventListener('DOMContentLoaded', () => {
     event.preventDefault();
     console.log(isShiftLeftPressed);
 
-    if (event.code === 'ShiftLeft' && isShiftLeftPressed) {
+    if ((event.code === 'ShiftLeft'||event.code === 'ShiftRight') && (isShiftLeftPressed ||isShiftRightPressed)) {
       if (isCapsLockPressed) {
         createKeyboardLayout('nameToUpperCase');
         highlightCapsLock();
       } else createKeyboardLayout('nameToLowerCase');
       isShiftLeftPressed = false;
+      isShiftRightPressed = false;
     }
 
     targetDomEl.classList.remove('pressed');
