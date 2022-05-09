@@ -33,7 +33,7 @@ document.head.appendChild(title);
 
 const info = document.createElement('div');
 info.classList.add('info');
-info.insertAdjacentText('afterbegin', 'Клавиатура создана в операционной системе Windows. Для смены языка используйте alt+shift');
+info.insertAdjacentText('afterbegin', 'Клавиатура создана в операционной системе Windows. Для смены языка используйте alt+shift. стрелочки влево и вправо работают, а верх и низ просто печатаются');
 
 const textarea = document.createElement('textarea');
 textarea.setAttribute('autofocus', '');
