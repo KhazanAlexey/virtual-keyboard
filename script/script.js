@@ -33,7 +33,7 @@ document.head.appendChild(title);
 
 const info = document.createElement('div');
 info.classList.add('info');
-info.insertAdjacentText('afterbegin', 'Клавиатура создана в операционной системе Windows. Для смены языка используйте alt+shift');
+info.insertAdjacentText('afterbegin', 'Клавиатура создана в операционной системе Windows. Для смены языка используйте alt+shift. стрелочки влево и вправо работают, а верх и низ просто печатаются');
 
 const textarea = document.createElement('textarea');
 textarea.setAttribute('autofocus', '');
@@ -251,6 +251,7 @@ function startAction(targetElement) {
     default:
   }
 }
+
 function findPressedKeyValues(keyCode) {
   let targetElement = {};
   function find(el) {
@@ -269,8 +270,6 @@ function findPressedKeyValues(keyCode) {
   const shift = isShiftPressed();
   let input = 'input';
 
-  // input=(isCapsLockPressed&&targetElement.mutable===false)?'input':'inputShift';
-  // input = (shift || isCapsLockPressed) ? 'inputShift' : 'input';
   if (isCapsLockPressed && targetElement.mutable === false) input = 'input';
   if (isCapsLockPressed && targetElement.mutable === true) input = 'inputShift';
 
@@ -282,6 +281,7 @@ function findPressedKeyValues(keyCode) {
   }
   return null;
 }
+
 function doGetCaretPosition(ctrl) {
   let CaretPos = 0;
 
@@ -293,6 +293,7 @@ function doGetCaretPosition(ctrl) {
   } else if (ctrl.selectionStart || ctrl.selectionStart === '0') CaretPos = ctrl.selectionStart;
   return (CaretPos);
 }
+
 // keyboard key dom element
 class Key {
   constructor({
@@ -326,7 +327,6 @@ class Key {
 
         if (PressedKeyValue) textarea.insertText(PressedKeyValue);
         textarea.focus();
-        // mouseWatch(keyCode);
       }
     });
 
@@ -334,6 +334,8 @@ class Key {
       textarea.focus();
       isShiftLeftPressed = false;
       isShiftRightPressed = false;
+      isAltLeftPressed = false;
+      isAltRightPressed = false;
 
       if (isCapsLockPressed) {
         createKeyboardLayout('nameToUpperCase');
@@ -369,7 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.body.appendChild(inputWithInfo);
 
   createKeyboardLayout('nameToLowerCase');
-
+// initialize keyboard events
   document.addEventListener('keydown', (event) => {
     const targetDomEl = document.querySelector(`div[data-keycode=${event.code}]`);
     event.preventDefault();
@@ -377,7 +379,6 @@ document.addEventListener('DOMContentLoaded', () => {
     targetDomEl.classList.add('pressed');
     const pressedKeyValue = findPressedKeyValues(event.code);
     if (pressedKeyValue) {
-      // value=textarea.value+pressedKeyValue
       textarea.insertText(pressedKeyValue);
     }
   });
