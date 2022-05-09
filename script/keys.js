@@ -291,8 +291,8 @@ const keys = [
       type: 'char',
       mutable: false,
       keyCode: 'Enter',
-      en: { name: 'ENTER', input: '\r' },
-      ru: { name: 'ENTER', input: '\r' },
+      en: { name: 'ENTER', input: '\r', inputShift: '\r' },
+      ru: { name: 'ENTER', input: '\r', inputShift: '\r' },
     },
 
   ],
@@ -372,7 +372,7 @@ const keys = [
       ru: { name: ',.', input: '.', inputShift: ',' },
     },
     {
-      type: 'action', mutable: false, keyCode: 'ArrowUp', en: { name: '\u2191' }, ru: { name: '\u2191' },
+      type: 'char', mutable: true, keyCode: 'ArrowUp', en: { name: '\u2191', input: '▲', inputShift: '▲' }, ru: { name: '\u2191', input: '▲', inputShift: '▲' },
     },
     {
       type: 'action', mutable: false, keyCode: 'ShiftRight', en: { name: 'Shift' }, ru: { name: 'Shift' },
@@ -409,7 +409,7 @@ const keys = [
       type: 'action', mutable: false, keyCode: 'ArrowLeft', en: { name: '\u2190' }, ru: { name: '\u2190' },
     },
     {
-      type: 'action', mutable: false, keyCode: 'ArrowDown', en: { name: '\u2193' }, ru: { name: '\u2193' },
+      type: 'char', mutable: true, keyCode: 'ArrowDown', en: { name: '\u2193', input: '▼', inputShift: '▼' }, ru: { name: '\u2193', input: '▼', inputShift: '▼' },
     },
     {
       type: 'action', mutable: false, keyCode: 'ArrowRight', en: { name: '\u2192' }, ru: { name: '\u2192' },

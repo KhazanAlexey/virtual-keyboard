@@ -2,6 +2,15 @@
     display: flex;
     flex-direction: column;
     width: 69vw;
+    margin: 0 auto;
+}
+
+.info,
+textarea{
+    width: 69vw;
+    margin: 0 auto;
+    display: block;
+    margin-bottom: 50px;
 }
 
 .lower-case {
@@ -13,6 +22,7 @@
 }
 
 .key {
+    position: relative;
     flex: 0 0 3vw;
     height: 3vw;
     margin: 0.25vw;
@@ -20,17 +30,22 @@
     overflow: hidden;
     font-size: 1.5vw;
     border-radius: 3px;
+    z-index: 0;
     border: 1px solid;
     text-align: center;
     line-height: 3vw;
     user-select: none;
     -webkit-user-select: none;
     transition: color 0.1s linear;
+    transition: border-radius 0.3s, background-color 0.3s;
 }
-
+/*.key:hover{*/
+/*    background: gold;*/
+/*}*/
 .key.active {
     background-color: rgb(255 0 88 / 20%);
-    transition: color 0.2s linear;
+    transition: color 0.2s linssear;
+
 }
 
 .first-char {
@@ -47,11 +62,80 @@
 
 .wide-button {
     flex: 1 0 9vw;
+    max-width: 28.4vw;
 }
 
-.pressed{
-    background-color: rgba(255, 0, 242, 0.49);
+.pressed {
+    /*background-color: rgba(255, 0, 242, 0.49);*/
+    border-radius: 50%;
+    /*box-shadow: 0px 0px 3px 1px;*/
+
+
 }
-.caps-lock{
-    background-color: rgba(89, 255, 0, 0.49);
+
+.caps-lock {
+    background-color: red;
+}
+
+
+/*.key {*/
+/*    width: 220px;*/
+/*    height: 50px;*/
+/*    border: none;*/
+/*    outline: none;*/
+/*    color: #fff;*/
+/*    background: #111;*/
+/*    cursor: pointer;*/
+/*    position: relative;*/
+/*    z-index: 0;*/
+/*    border-radius: 10px;*/
+/*}*/
+
+.key:before {
+    content: '';
+    background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+    position: absolute;
+    top: -2px;
+    left:-2px;
+    background-size: 400%;
+    z-index: -1;
+    filter: blur(5px);
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    animation: glowing 20s linear infinite;
+    opacity: 0;
+    transition: opacity 0.1s ease-in-out;
+    border-radius: 10px;
+}
+
+.key:active {
+    color: #000;
+    border-radius: 50%;
+}
+.key.pressed:after,
+.key:active:after {
+    background: transparent;
+
+}
+.key.pressed:before,
+.key:hover:before {
+    opacity: 1;
+}
+
+.key:after {
+    z-index: -1;
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #ffff;
+    left: 0;
+    top: 0;
+    border-radius: 10px;
+}
+
+@keyframes glowing {
+    0% { background-position: 0 0; }
+    50% { background-position: 400% 0; }
+    100% { background-position: 0 0; }
 }
