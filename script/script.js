@@ -48,7 +48,6 @@ container.classList.add('container');
 
 // variables
 
-let currentKey;
 let isShiftLeftPressed;
 let isShiftRightPressed;
 let isAltLeftPressed;
@@ -99,6 +98,15 @@ const buttonLayout = (charName) => {
   }
   return charsWrapper;
 };
+// highlightCapsLock button
+const highlightCapsLock = () => {
+  const capsDom = document.querySelector('div[data-keycode=\'CapsLock\']');
+  if (isCapsLockPressed) {
+    capsDom.classList.add('caps-lock');
+  } else {
+    capsDom.classList.remove('caps-lock');
+  }
+};
 
 // initialize textarea insertText method
 textarea.insertText = function insertText(text) {
@@ -112,138 +120,7 @@ function createRow() {
   return rowElement;
 }
 
-// keyboard key dom element
-class Key {
-  constructor({
-    type,
-    mutable,
-    keyCode,
-    en,
-    ru,
-  }) {
-    this.en = en;
-    this.ru = ru;
-    this.type = type;
-    this.isMutable = mutable;
-    this.keyElement = document.createElement('div');
-    this.keyElement.classList.add('key');
-    this.keyElement.setAttribute('data-keycode', keyCode);
-    this.keyElement.appendChild(buttonLayout(getLanguage() === 'en' ? this.en.name : this.ru.name));
-
-    this.keyElement.addEventListener('mousedown', (event) => {
-
-      // var theVal = textarea.value;
-      // textarea.value = theVal;
-if(!isCapsLockPressed){
-  isCapsLockPressed=false
-  highlightCapsLock()
-
-}
-      if (event.which === 1) {
-        mouseWatch(keyCode);
-      }
-    });
-    this.keyElement.addEventListener('mouseup', (event) => {
-      isShiftLeftPressed = false;
-      if (isCapsLockPressed) {
-        createKeyboardLayout('nameToUpperCase');
-        highlightCapsLock();
-      } else createKeyboardLayout('nameToLowerCase');
-      isShiftLeftPressed = false;
-      isShiftRightPressed = false;
-
-
-    isShiftRightPressed=false
-    isShiftLeftPressed=false
-      isAltLeftPressed=false
-      isAltRightPressed=false
-      document.querySelectorAll('.key').forEach(k=>k.classList.remove('pressed'))
-     setTimeout(()=>{
-       console.log(event.target.closest('.key').dataset.keycode==="ShiftLeft")
-       if (event.target.closest('.key').dataset.keycode==="ShiftLeft"){
-         document.querySelectorAll('.key').forEach(k=>k.classList.add('lower-case'))
-       }
-       document.querySelectorAll('.key').forEach(k=>k.classList.remove('pressed'))
-       // document.querySelectorAll('.key').forEach(k=>k.classList.add('lower-case'))
-       // event.target.closest('.key').classList.remove('pressed');
-     },1)
-
-
-    // const targetDomEl = document.querySelector(`div[data-keycode=${event.code}]`);
-    // console.log(targetDomEl)
-    //   targetDomEl.classList.remove('pressed');
-      // document.querySelectorAll('.key').forEach(el=>el.classList.remove('pressed'))
-    });
-
-    this.keyElement.addEventListener('mouseenter', () => {
-
-      currentKey = keyCode;
-    });
-
-    this.keyElement.addEventListener('mouseleave', () => {
-
-      currentKey = '';
-    });
-
-    if (wideButtons.includes(keyCode)) {
-      this.keyElement.classList.add('wide-button');
-    }
-  }
-
-  nameToUpperCase() {
-    if (this.isMutable) {
-      this.keyElement.classList.remove('lower-case');
-    }
-    return this;
-  }
-
-  nameToLowerCase() {
-    if (this.isMutable) {
-      this.keyElement.classList.add('lower-case');
-    }
-    return this;
-  }
-
-  buildKey() {
-    return this.keyElement;
-  }
-}
-
 const isShiftPressed = () => isShiftRightPressed || isShiftLeftPressed;
-
-function findPressedKeyValues(keyCode) {
-  let targetElement = {};
-  function find(el) {
-    if (el.keyCode === keyCode) {
-      targetElement = el;
-      return el;
-    }
-    return undefined;
-  }
-  keys.forEach((row) => row.find(find));
-
-  if (targetElement.type === 'action' && !isShiftPressed()) {
-    startAction(targetElement);
-  }
-  const currentLang = getLanguage();
-  const shift = isShiftPressed();
-  let input;
-  input = (shift || isCapsLockPressed) ? 'inputShift' : 'input';
-  if (isCapsLockPressed && shift) input = 'input';
-  if (targetElement.type === 'char') {
-    return targetElement[currentLang][input];
-  }
-  return null;
-}
-
-const highlightCapsLock = () => {
-  const capsDom = document.querySelector('div[data-keycode=\'CapsLock\']');
-  if (isCapsLockPressed) {
-    capsDom.classList.add('caps-lock');
-  } else {
-    capsDom.classList.remove('caps-lock');
-  }
-};
 
 function createKeyboardLayout(registerCase) {
   if (container.children.length !== 0) {
@@ -262,7 +139,6 @@ function createKeyboardLayout(registerCase) {
 
   document.body.appendChild(container);
 }
-
 const deletePrevious = () => {
   if (textarea.selectionStart === textarea.selectionEnd) {
     if (textarea.selectionStart > 0) {
@@ -296,12 +172,11 @@ function startAction(targetElement) {
   const key = targetElement.keyCode;
   switch (key) {
     case 'CapsLock':
-
-      if (isCapsLockPressed) {
+      isCapsLockPressed = !isCapsLockPressed;
+      if (!isCapsLockPressed) {
         createKeyboardLayout('nameToLowerCase');
       } else createKeyboardLayout('nameToUpperCase');
 
-      isCapsLockPressed = !isCapsLockPressed;
       highlightCapsLock();
 
       break;
@@ -376,42 +251,119 @@ function startAction(targetElement) {
     default:
   }
 }
-let value='';
-const mouseWatch = (keyCode) => {
-  console.log('evenr', event);
-  // textarea.focus();
+function findPressedKeyValues(keyCode) {
+  let targetElement = {};
+  function find(el) {
+    if (el.keyCode === keyCode) {
+      targetElement = el;
+      return el;
+    }
+    return undefined;
+  }
+  keys.forEach((row) => row.find(find));
 
-  container.addEventListener('mouseup', () => {
+  if (targetElement.type === 'action' && !isShiftPressed()) {
+    startAction(targetElement);
+  }
+  const currentLang = getLanguage();
+  const shift = isShiftPressed();
+  let input = 'input';
 
-    const PressedKeyValue = findPressedKeyValues(keyCode);
+  // input=(isCapsLockPressed&&targetElement.mutable===false)?'input':'inputShift';
+  // input = (shift || isCapsLockPressed) ? 'inputShift' : 'input';
+  if (isCapsLockPressed && targetElement.mutable === false) input = 'input';
+  if (isCapsLockPressed && targetElement.mutable === true) input = 'inputShift';
 
-    let pos=doGetCaretPosition(textarea)
-    textarea.setSelectionRange(textarea.value.length,pos);
-
-    console.log(pos)
-    if (PressedKeyValue) textarea.insertText(PressedKeyValue);
-    textarea.focus();
-    console.log('mouseup');
-  }, { once: true });
-
-};
-
-
+  if (shift)input = 'inputShift';
+  if (isCapsLockPressed && shift) input = 'input';
+  if (isCapsLockPressed && shift && targetElement.mutable === false) input = 'inputShift';
+  if (targetElement.type === 'char') {
+    return targetElement[currentLang][input];
+  }
+  return null;
+}
 function doGetCaretPosition(ctrl) {
-  var CaretPos = 0;
-  // IE Support
+  let CaretPos = 0;
+
   if (document.selection) {
     ctrl.focus();
-    var Sel = document.selection.createRange();
+    const Sel = document.selection.createRange();
     Sel.moveStart('character', -ctrl.value.length);
     CaretPos = Sel.text.length;
-  }
-  // Firefox support
-  else if (ctrl.selectionStart || ctrl.selectionStart == '0')
-    CaretPos = ctrl.selectionStart;
+  } else if (ctrl.selectionStart || ctrl.selectionStart === '0') CaretPos = ctrl.selectionStart;
   return (CaretPos);
 }
+// keyboard key dom element
+class Key {
+  constructor({
+    type,
+    mutable,
+    keyCode,
+    en,
+    ru,
+  }) {
+    this.en = en;
+    this.ru = ru;
+    this.type = type;
+    this.isMutable = mutable;
+    this.keyElement = document.createElement('div');
+    this.keyElement.classList.add('key');
+    this.keyElement.setAttribute('data-keycode', keyCode);
+    this.keyElement.appendChild(buttonLayout(getLanguage() === 'en' ? this.en.name : this.ru.name));
 
+    this.keyElement.addEventListener('mousedown', (event) => {
+      textarea.focus();
+
+      if (!isCapsLockPressed) {
+        isCapsLockPressed = false;
+        highlightCapsLock();
+      }
+      if (event.which === 1) {
+        const PressedKeyValue = findPressedKeyValues(keyCode);
+
+        const pos = doGetCaretPosition(textarea);
+        textarea.setSelectionRange(textarea.value.length, pos);
+
+        if (PressedKeyValue) textarea.insertText(PressedKeyValue);
+        textarea.focus();
+        // mouseWatch(keyCode);
+      }
+    });
+
+    this.keyElement.addEventListener('mouseup', () => {
+      textarea.focus();
+      isShiftLeftPressed = false;
+      isShiftRightPressed = false;
+
+      if (isCapsLockPressed) {
+        createKeyboardLayout('nameToUpperCase');
+        highlightCapsLock();
+      } else createKeyboardLayout('nameToLowerCase');
+    });
+
+    if (wideButtons.includes(keyCode)) {
+      this.keyElement.classList.add('wide-button');
+    }
+  }
+
+  nameToUpperCase() {
+    if (this.isMutable) {
+      this.keyElement.classList.remove('lower-case');
+    }
+    return this;
+  }
+
+  nameToLowerCase() {
+    if (this.isMutable) {
+      this.keyElement.classList.add('lower-case');
+    }
+    return this;
+  }
+
+  buildKey() {
+    return this.keyElement;
+  }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   document.body.appendChild(inputWithInfo);
@@ -424,18 +376,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     targetDomEl.classList.add('pressed');
     const pressedKeyValue = findPressedKeyValues(event.code);
-    if (pressedKeyValue){
+    if (pressedKeyValue) {
       // value=textarea.value+pressedKeyValue
       textarea.insertText(pressedKeyValue);
-
-
     }
   });
 
   document.addEventListener('keyup', (event) => {
     const targetDomEl = document.querySelector(`div[data-keycode=${event.code}]`);
     event.preventDefault();
-
+    isAltLeftPressed = false;
+    isAltRightPressed = false;
     if ((event.code === 'ShiftLeft' || event.code === 'ShiftRight') && (isShiftLeftPressed || isShiftRightPressed)) {
       if (isCapsLockPressed) {
         createKeyboardLayout('nameToUpperCase');

@@ -13,7 +13,8 @@
     "sourceType": "module"
   },
   "rules": {
-    "import/extensions": ["error", "always"]
+    "import/extensions": ["error", "always"],
+    "no-use-before-define": ["error", {"functions": false, "classes": false}]
   }
 
 }
